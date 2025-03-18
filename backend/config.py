@@ -25,7 +25,7 @@ class Config:
     """
 
     # Database configuration
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI', 'mysql+pymysql://root:maunyit@localhost/gaine_africa')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Debugging: Print the DATABASE_URI

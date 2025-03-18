@@ -3,9 +3,7 @@
 Defines the BaseModel class for common database operations.
 """
 
-from . import db
-
-
+from ..db import db
 class BaseModel(db.Model):
     """
     Base model class for common database operations.

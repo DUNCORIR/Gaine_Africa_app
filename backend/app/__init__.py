@@ -4,11 +4,9 @@ The script initializes the SQLAlchemy
 """
 
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from .db import db
 
-# Initialize SQLAlchemy
-db = SQLAlchemy()
 
 
 def create_app():
@@ -26,6 +24,10 @@ def create_app():
 
     # Initialize the database with the app
     db.init_app(app)
+
+    # Import and register models within the function
+    with app.app_context():
+        from .models import User, Record
 
     # Register the main routes blueprint
     from .routes import main_routes
