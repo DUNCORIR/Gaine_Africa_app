@@ -36,7 +36,8 @@ def create_user():
     if not all(key in data for key in ['name', 'email', 'password']):
         return jsonify({'error': 'Missing required fields'}), 400
 
-    new_user = User(name=data['name'], email=data['email'], password=data['password'])
+    new_user = User(name=data['name'], email=data['email'])
+    new_user.set_password(data['password'])  # Hash and store password
     db.session.add(new_user)
     db.session.commit()
 
