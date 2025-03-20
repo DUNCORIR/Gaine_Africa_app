@@ -18,6 +18,7 @@ def create_app():
     """
     app = Flask(__name__)
     app.config.from_object('config.Config')
+    app.secret_key = "maunyit"
 
     # Enable CORS for all routes
     CORS(app)

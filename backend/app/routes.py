@@ -3,12 +3,20 @@
 Defines the API routes for the Gaine Africa application.
 """
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, session
 from .models import User, Record
 from . import db
+from flask_bcrypt import Bcrypt
 
+bcrypt = Bcrypt()
 main_routes = Blueprint('main', __name__)
 
+def authenticate_user(email, password):
+    """Authenticate user by email and password."""
+    user = User.query.filter_by(email=email).first()
+    if user and user.check_password(password):
+        return user
+    return None
 
 @main_routes.route('/api/users', methods=['GET'])
 def get_users():
@@ -21,34 +29,63 @@ def get_users():
     users = User.query.all()
     return jsonify([{'id': user.id, 'name': user.name} for user in users])
 
-
 @main_routes.route('/api/users', methods=['POST'])
 def create_user():
     """
-    Create a new user.
+    Create a new user with email uniqueness check.
 
     Returns:
         JSON response with a success message or an error message.
     """
     data = request.get_json()
-
-    # Validate required fields
+    
     if not all(key in data for key in ['name', 'email', 'password']):
         return jsonify({'error': 'Missing required fields'}), 400
-
+    
+    existing_user = User.query.filter_by(email=data['email']).first()
+    if existing_user:
+        return jsonify({'error': 'Email already in use'}), 409
+    
     new_user = User(name=data['name'], email=data['email'])
-    new_user.set_password(data['password'])  # Hash and store password
+    new_user.set_password(data['password'])
     db.session.add(new_user)
     db.session.commit()
-
+    
     return jsonify({'message': 'User created successfully'}), 201
 
+@main_routes.route('/api/login', methods=['POST'])
+def login():
+    """
+    Authenticate a user.
+    
+    Returns:
+        JSON response with a success or error message.
+    """
+    data = request.get_json()
+    
+    if not data or not data.get('email') or not data.get('password'):
+        return jsonify({'error': 'Email and password are required'}), 400
+    
+    user = authenticate_user(data['email'], data['password'])
+    if user:
+        session['user_id'] = user.id
+        return jsonify({'message': 'Login successful', 'user_id': user.id}), 200
+    else:
+        return jsonify({'error': 'Invalid email or password'}), 401
+
+@main_routes.route('/api/logout', methods=['POST'])
+def logout():
+    """
+    Logs out a user by clearing the session.
+    """
+    session.pop('user_id', None)
+    return jsonify({'message': 'Logout successful'}), 200
 
 @main_routes.route('/api/users/<int:user_id>/records', methods=['GET'])
 def get_records(user_id):
     """
     Retrieve all records for a specific user.
-
+    
     Args:
         user_id (int): The ID of the user.
 
@@ -56,22 +93,23 @@ def get_records(user_id):
         JSON response containing a list of records or an error message.
     """
     records = Record.query.filter_by(user_id=user_id).all()
-
+    
     if not records:
         return jsonify({'error': 'No records found for this user'}), 404
-
-    return jsonify([{
-        'id': record.id,
-        'input': record.input_amount,
-        'output': record.output_amount
-    } for record in records])
-
+    
+    return jsonify([
+        {
+            'id': record.id,
+            'input': record.input_amount,
+            'output': record.output_amount
+        } for record in records
+    ])
 
 @main_routes.route('/api/users/<int:user_id>/records', methods=['POST'])
 def create_record(user_id):
     """
     Create a new record for a specific user.
-
+    
     Args:
         user_id (int): The ID of the user.
 
@@ -79,11 +117,10 @@ def create_record(user_id):
         JSON response with a success message or an error message.
     """
     data = request.get_json()
-
-    # Validate required fields
+    
     if not all(key in data for key in ['input', 'output', 'expenses']):
         return jsonify({'error': 'Missing required fields'}), 400
-
+    
     new_record = Record(
         user_id=user_id,
         input_amount=data['input'],
@@ -92,5 +129,47 @@ def create_record(user_id):
     )
     db.session.add(new_record)
     db.session.commit()
-
+    
     return jsonify({'message': 'Record created successfully'}), 201
+
+@main_routes.route('/api/users/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    """
+    Retrieve a single user by ID.
+    
+    Args:
+        user_id (int): The ID of the user.
+
+    Returns:
+        JSON response containing the user details or an error message.
+    """
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    return jsonify({'id': user.id, 'name': user.name, 'email': user.email})
+
+@main_routes.route('/api/users/<int:user_id>', methods=['PUT'])
+def update_user(user_id):
+    """
+    Update a user's details.
+
+    Args:
+        user_id (int): The ID of the user.
+
+    Returns:
+        JSON response with success or error message.
+    """
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    data = request.get_json()
+    
+    if 'name' in data:
+        user.name = data['name']
+    if 'email' in data:
+        user.email = data['email']
+
+    db.session.commit()
+    return jsonify({'message': 'User updated successfully'}), 200
