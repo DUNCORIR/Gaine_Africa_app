@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from "../assets/images/gaine-logo.png";
+import logo from "../assets/images/gaine-logo.png"; // Ensure the logo path is correct
 
 function Navbar() {
   return (
@@ -13,11 +13,9 @@ function Navbar() {
         <li><Link to="/market-data">Market Data</Link></li>
         <li><Link to="/predictions">Predictions</Link></li>
         <li><Link to="/login">Login</Link></li>
-        <li><Link to="/register">Register</Link></li>
       </ul>
     </nav>
   );
 }
 
 export default Navbar;
-

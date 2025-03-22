@@ -1,0 +1,9 @@
+function Footer() {
+  return (
+    <footer className="footer">
+      <p>&copy; {new Date().getFullYear()} Gaine Africa. All Rights Reserved.</p>
+    </footer>
+  );
+}
+
+export default Footer;
