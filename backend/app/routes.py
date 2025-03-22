@@ -173,3 +173,26 @@ def update_user(user_id):
 
     db.session.commit()
     return jsonify({'message': 'User updated successfully'}), 200
+
+@main_routes.route('/api/register', methods=['POST'])
+def register():
+    """Register a new user with hashed password"""
+    data = request.get_json()
+    
+    # Check if required fields are provided
+    if not data or not all(key in data for key in ["name", "email", "password"]):
+        return jsonify({"error": "Missing required fields"}), 400
+
+    # Check if user already exists
+    if User.query.filter_by(email=data["email"]).first():
+        return jsonify({"error": "User already exists"}), 400
+
+    # Create a new user instance
+    new_user = User(name=data["name"], email=data["email"])
+    new_user.set_password(data["password"])  # ✅ Correct way to store password
+
+    # Save user to database
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({"message": "User registered successfully"}), 201
