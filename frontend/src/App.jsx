@@ -8,6 +8,7 @@ import Footer from "./components/Footer";
 import "./styles/global.css";
 import "./styles/Navbar.css";
 import Register from "./pages/Register";
+import Records from "./pages/Records";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<Dashboard />} />
+	  <Route path="/records" element={<Records />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="*" element={<NotFound />} />
