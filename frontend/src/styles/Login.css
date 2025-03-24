@@ -1,30 +1,67 @@
+/* Login Page Styles */
 .login-container {
-  width: 300px;
-  margin: auto;
+  max-width: 400px;
+  margin: 60px auto;
   padding: 20px;
+  background: white;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
   text-align: center;
+}
+
+.login-container h1 {
+  color: #2d7a34; /* Green theme */
+  margin-bottom: 20px;
+}
+
+.login-message {
+  font-size: 14px;
+  color: red;
+  margin-bottom: 10px;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
+  gap: 12px;
 }
 
-input {
-  margin-bottom: 10px;
-  padding: 8px;
+.login-form input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
   font-size: 16px;
 }
 
-button {
-  background-color: #28a745;
+.login-form button {
+  width: 100%;
+  padding: 12px;
+  background-color: #2d7a34;
   color: white;
-  padding: 10px;
+  font-size: 18px;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.3s ease;
 }
 
-.login-message {
-  margin-top: 10px;
+.login-form button:hover {
+  background-color: #216126;
+}
+
+.register-link {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.register-link a {
+  color: #2d7a34;
+  text-decoration: none;
   font-weight: bold;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
 }

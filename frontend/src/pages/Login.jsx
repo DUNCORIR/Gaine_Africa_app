@@ -13,7 +13,7 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setMessage("");
+    setMessage(""); // Clear any previous message
 
     try {
       const response = await axios.post("http://127.0.0.1:5000/api/login", {
@@ -21,7 +21,7 @@ function Login() {
         password,
       });
 
-      console.log("🛠 Debug: Backend Response:", response.data);
+      console.log("🔍 Debug: Backend Response:", response.data);
 
       if (response.data.user && response.data.user.id) {
         loginUser({
@@ -36,7 +36,7 @@ function Login() {
         setMessage("⚠️ Error: Missing user ID in response.");
       }
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("❌ Login error:", error);
       setMessage("❌ Invalid email or password.");
     }
   };
@@ -44,6 +44,7 @@ function Login() {
   return (
     <div className="login-container">
       <h1>Login</h1>
+      {message && <p className="login-message">{message}</p>}
       <form onSubmit={handleLogin} className="login-form">
         <input
           type="email"
@@ -61,7 +62,9 @@ function Login() {
         />
         <button type="submit">Login</button>
       </form>
-      {message && <p className="login-message">{message}</p>}
+      <p className="register-link">
+        Don't have an account? <a href="/register">Sign up</a>
+      </p>
     </div>
   );
 }
