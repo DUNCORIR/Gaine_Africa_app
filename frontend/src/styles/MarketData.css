@@ -1,0 +1,26 @@
+.market-data-container {
+  text-align: center;
+  padding: 20px;
+}
+
+.market-data-table {
+  width: 80%;
+  margin: 20px auto;
+  border-collapse: collapse;
+}
+
+.market-data-table th,
+.market-data-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+
+.market-data-table th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+}

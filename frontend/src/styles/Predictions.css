@@ -1,0 +1,21 @@
+.predictions-container {
+  max-width: 800px;
+  margin: auto;
+  text-align: center;
+}
+
+.predictions-container h2 {
+  color: #2c3e50;
+}
+
+.predictions-container ul {
+  list-style: none;
+  padding: 0;
+}
+
+.predictions-container li {
+  background: #f8f9fa;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 5px;
+}

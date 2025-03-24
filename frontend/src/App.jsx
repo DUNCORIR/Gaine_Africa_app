@@ -7,6 +7,8 @@ import NotFound from "./pages/NotFound";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Records from "./pages/Records";
+import MarketData from "./pages/MarketData";
+import Predictions from "./pages/Predictions";  // Import Predictions page
 import "./styles/global.css";
 import "./styles/Navbar.css";
 
@@ -22,6 +24,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/records" element={<Records />} />
+            <Route path="/predictions" element={<Predictions />} />
+            <Route path="/market-data" element={<MarketData />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="*" element={<NotFound />} />
