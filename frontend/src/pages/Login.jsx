@@ -1,33 +1,66 @@
 import { useState } from "react";
 import axios from "axios";
+import { loginUser } from "../services/auth";
+import { useNavigate } from "react-router-dom";
+import "../styles/Login.css"; // Import CSS file
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setMessage("");
+
     try {
       const response = await axios.post("http://127.0.0.1:5000/api/login", {
         email,
         password,
       });
-      setMessage("Login successful!");
+
+      console.log("🛠 Debug: Backend Response:", response.data);
+
+      if (response.data.user && response.data.user.id) {
+        loginUser({
+          email: response.data.user.email,
+          id: response.data.user.id,
+          name: response.data.user.name,
+        });
+
+        setMessage("✅ Login successful!");
+        setTimeout(() => navigate("/dashboard"), 1500);
+      } else {
+        setMessage("⚠️ Error: Missing user ID in response.");
+      }
     } catch (error) {
-      setMessage("Invalid email or password.");
+      console.error("Login error:", error);
+      setMessage("❌ Invalid email or password.");
     }
   };
 
   return (
-    <div>
+    <div className="login-container">
       <h1>Login</h1>
-      <form onSubmit={handleLogin}>
-        <input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
-        <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
+      <form onSubmit={handleLogin} className="login-form">
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
         <button type="submit">Login</button>
       </form>
-      <p>{message}</p>
+      {message && <p className="login-message">{message}</p>}
     </div>
   );
 }
