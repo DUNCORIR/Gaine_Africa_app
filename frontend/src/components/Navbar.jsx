@@ -1,13 +1,24 @@
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/images/gaine-logo.png";
-import { useAuth } from "../context/AuthContext"; // ✅ Use Auth Context
+import { getUser, logoutUser } from "../services/auth";
+import { useEffect, useState } from "react";
 
 function Navbar() {
-  const { user, logoutUser } = useAuth(); // ✅ Fix destructuring
-  const navigate = useNavigate(); // ✅ For redirection
+  const [user, setUser] = useState(getUser()); // ✅ Get logged-in user
+  const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logoutUser(); // ✅ Logout function
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setUser(getUser()); // ✅ Update user state when login/logout happens
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
+
+  const handleLogout = async () => {
+    await logoutUser();
+    setUser(null); // ✅ Remove user from state
     navigate("/login"); // ✅ Redirect to login page
   };
 
@@ -24,7 +35,6 @@ function Navbar() {
         {user ? (
           <>
             <li><Link to="/dashboard">Dashboard</Link></li>
-            <li><Link to="/records">Records</Link></li>
             <li><button onClick={handleLogout} className="logout-btn">Logout</button></li>
           </>
         ) : (

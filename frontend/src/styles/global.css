@@ -1,10 +1,42 @@
-body {
-    background-color: #f4f4f4;
-    font-family: 'Arial', sans-serif;
+/* Apply a full height layout */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
 }
 
-.container {
-    max-width: 1200px;
-    margin: auto;
-    padding: 20px;
+/* App container (Ensures footer stays at the bottom) */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Full viewport height */
+}
+
+/* Main content expands to push footer down */
+.main-content {
+  flex: 1; /* Takes remaining space */
+  padding-bottom: 50px; /* Avoids content overlapping footer */
+}
+
+/* Logo Styling */
+.logo-container {
+  margin-bottom: 20px;
+}
+
+.logo {
+  width: 150px; /* Adjust size as needed */
+  height: auto;
+}
+
+/* Footer styling (Always at bottom) */
+.footer {
+  text-align: center;
+  padding: 10px;
+  background-color: #f8f8f8;
+  width: 100%;
+  position: relative;
+  bottom: 0;
 }

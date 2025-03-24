@@ -1,0 +1,9 @@
+/* Footer Styling */
+.footer {
+  text-align: center;
+  padding: 10px;
+  background-color: #f8f8f8;
+  width: 100%;
+  position: relative;
+  bottom: 0;
+}
