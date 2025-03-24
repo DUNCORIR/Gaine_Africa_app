@@ -35,6 +35,7 @@ function Navbar() {
         {user ? (
           <>
             <li><Link to="/dashboard">Dashboard</Link></li>
+            <li><Link to="/records">Records</Link></li>
             <li><button onClick={handleLogout} className="logout-btn">Logout</button></li>
           </>
         ) : (
