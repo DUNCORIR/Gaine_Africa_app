@@ -6,6 +6,7 @@ Defines the API routes for the Gaine Africa application.
 from flask import Blueprint, jsonify, request, session
 from .models import User, Record
 from . import db
+from .models.prediction import Prediction
 from flask_bcrypt import Bcrypt
 
 bcrypt = Bcrypt()
@@ -201,3 +202,29 @@ def register():
     db.session.commit()
 
     return jsonify({"message": "User registered successfully"}), 201
+
+@main_routes.route('/api/predictions', methods=['GET'])
+def get_predictions():
+    """Retrieve all AI crop predictions."""
+    predictions = Prediction.query.all()
+    return jsonify([prediction.to_dict() for prediction in predictions])
+
+@main_routes.route('/api/predictions', methods=['POST'])
+def add_prediction():
+    """Add a new AI crop prediction."""
+    data = request.get_json()
+
+    if not all(key in data for key in ['user_id', 'crop', 'yield_estimate', 'market_price']):
+        return jsonify({'error': 'Missing required fields'}), 400
+
+    new_prediction = Prediction(
+        user_id=data['user_id'],
+        crop=data['crop'],
+        yield_estimate=data['yield_estimate'],
+        market_price=data['market_price']
+    )
+
+    db.session.add(new_prediction)
+    db.session.commit()
+
+    return jsonify({'message': 'Prediction added successfully'}), 201

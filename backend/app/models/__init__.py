@@ -9,4 +9,5 @@ from ..db import db  # Import db from the separate module
 from .base_model import BaseModel
 from .user import User
 from .record import Record
-from .market_data import MarketData  # Optional, if needed
+from .prediction import Prediction 
+from .market_data import MarketData 
