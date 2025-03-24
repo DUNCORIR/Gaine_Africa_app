@@ -56,20 +56,30 @@ def create_user():
 @main_routes.route('/api/login', methods=['POST'])
 def login():
     """
-    Authenticate a user.
-    
+    Authenticate a user and return user details.
+
     Returns:
-        JSON response with a success or error message.
+        JSON response with user details or an error message.
     """
     data = request.get_json()
-    
+
     if not data or not data.get('email') or not data.get('password'):
         return jsonify({'error': 'Email and password are required'}), 400
-    
+
     user = authenticate_user(data['email'], data['password'])
+    
     if user:
-        session['user_id'] = user.id
-        return jsonify({'message': 'Login successful', 'user_id': user.id}), 200
+        session['user_id'] = user.id  # Store user ID in session
+
+        # ✅ Return full user details (excluding password)
+        return jsonify({
+            'message': 'Login successful',
+            'user': {
+                'id': user.id,
+                'name': user.name,
+                'email': user.email
+            }
+        }), 200
     else:
         return jsonify({'error': 'Invalid email or password'}), 401
 
@@ -85,18 +95,13 @@ def logout():
 def get_records(user_id):
     """
     Retrieve all records for a specific user.
-    
-    Args:
-        user_id (int): The ID of the user.
-
-    Returns:
-        JSON response containing a list of records or an error message.
     """
     records = Record.query.filter_by(user_id=user_id).all()
-    
+
+    # Return an empty array is returned instead of a 404 error
     if not records:
-        return jsonify({'error': 'No records found for this user'}), 404
-    
+        return jsonify([]), 200  #  Return empty list instead of error
+
     return jsonify([
         {
             'id': record.id,
