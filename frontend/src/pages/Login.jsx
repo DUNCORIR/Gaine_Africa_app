@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { loginUser } from "../services/auth";
+import { useAuth } from "../context/AuthContext"; // ✅ Use Auth Context
 import { useNavigate } from "react-router-dom";
 import "../styles/Login.css"; // Import CSS file
 
@@ -8,6 +8,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const { loginUser } = useAuth(); // ✅ Get loginUser from AuthContext
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {

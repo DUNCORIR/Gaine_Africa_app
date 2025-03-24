@@ -10,6 +10,12 @@ export function loginUser(user) {
   }
 }
 
-export function logoutUser() {
-  localStorage.removeItem("user"); // ✅ Remove user on logout
+export async function logoutUser() {
+  try {
+    await fetch("http://127.0.0.1:5000/api/logout", { method: "POST" }); // ✅ Notify backend
+    localStorage.removeItem("user"); // ✅ Remove user from storage
+    window.location.href = "/login"; // ✅ Redirect user to login page
+  } catch (error) {
+    console.error("Error logging out:", error);
+  }
 }

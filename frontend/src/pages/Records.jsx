@@ -1,47 +1,50 @@
 import { useEffect, useState } from "react";
-import { getUser } from "../services/auth";
+import { getUser } from "../services/auth"; // Import function to get logged-in user
 
 function Records() {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const user = getUser(); // Get logged-in user details
 
-  console.log("🔍 User data from getUser():", user); // ✅ Debugging line
-
   useEffect(() => {
-    if (!user || !user.id) {  // ✅ Check if user exists & has an ID
-      console.warn("⚠️ No user found. Redirecting to login.");
+    if (!user || !user.id) {
       setLoading(false);
-      return;
+      return; // Stop fetching if no user is logged in
     }
+
+    let isMounted = true; // ✅ Prevents setting state after unmount
 
     fetch(`http://127.0.0.1:5000/api/users/${user.id}/records`)
       .then((response) => {
         if (!response.ok) {
-          if (response.status === 404) {
-            console.warn(`No records found for user ID ${user.id}`);
-            setRecords([]);
-            setLoading(false);
-            return;
-          }
-          throw new Error(`Failed to fetch records: ${response.status}`);
+          console.warn(`⚠️ No records found for user ID ${user.id}`);
+          return [];
         }
         return response.json();
       })
       .then((data) => {
-        console.log("📄 Records received:", data); // ✅ Debugging line
-        setRecords(data);
-        setLoading(false);
+        if (isMounted) {
+          console.log("✅ Records received:", data);
+          setRecords(data);
+        }
       })
       .catch((error) => {
-        console.error("Error fetching records:", error);
-        setRecords([]); // Prevent infinite loop
-        setLoading(false);
+        console.error("❌ Error fetching records:", error);
+        if (isMounted) {
+          setRecords([]); // Prevent infinite loop
+        }
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
       });
-  }, [user]);
 
-  if (!user || !user.id) {
-    return <p>Please log in to view your records.</p>;
+    return () => {
+      isMounted = false; // ✅ Cleanup function to stop unwanted re-fetching
+    };
+  }, [user?.id]); // ✅ Only re-run when `user.id` changes
+
+  if (!user) {
+    return <p style={{ textAlign: "center", fontSize: "18px", color: "red" }}>⚠️ Please log in to view your records.</p>;
   }
 
   return (
