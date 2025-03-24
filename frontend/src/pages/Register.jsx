@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "../styles/Register.css"; // ✅ Import styles
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -26,13 +27,13 @@ function Register() {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage("Registration successful! Redirecting...");
+        setMessage(" Registration successful! Redirecting...");
         setTimeout(() => (window.location.href = "/login"), 2000); // Redirect after 2 sec
       } else {
-        setMessage(data.error || "Registration failed.");
+        setMessage(data.error || "egistration failed.");
       }
     } catch (error) {
-      setMessage("Error connecting to the server.");
+      setMessage(" Error connecting to the server.");
     }
   };
 
@@ -72,3 +73,4 @@ function Register() {
 }
 
 export default Register;
+
