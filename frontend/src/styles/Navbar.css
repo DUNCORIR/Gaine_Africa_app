@@ -6,8 +6,19 @@
   padding: 15px 20px;
 }
 
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  margin-left: 50px;
+}
 .navbar-logo img {
   height: 50px;
+  width: auto; /* Maintain aspect ratio */
+}
+
+.text-logo {
+  height: 50px; /* Match the height of the first logo */
+  width: auto; /* Maintain aspect ratio */
 }
 
 .navbar-links {

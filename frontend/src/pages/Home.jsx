@@ -1,11 +1,16 @@
 import { Link } from "react-router-dom";
 import "../styles/Home.css";
+import heroImage from "../assets/images/hero-image.jpg"; // ✅ Import hero image
 
 function Home() {
   return (
     <div className="home-container">
-      <h1>Welcome to Gaine Africa</h1>
-      <p>Empowering smallholder farmers with real-time market data, predictive analytics, and digital record-keeping tools.</p>
+      {/* Hero Section */}
+      <div className="hero" style={{ backgroundImage: `url(${heroImage})` }}>
+        <h1>Welcome to Gaine Africa</h1>
+        <p>Empowering smallholder farmers with real-time market data, predictive analytics, and digital record-keeping tools.</p>
+        <Link to="/register" className="hero-btn">Get Started</Link>
+      </div>
 
       {/* Features Section */}
       <div className="features">

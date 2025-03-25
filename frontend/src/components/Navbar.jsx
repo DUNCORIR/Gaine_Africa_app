@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/images/gaine-logo.png";
+import textLogo from "../assets/images/gaine-logoo.png";
 import { getUser, logoutUser } from "../services/auth";
 import { useEffect, useState } from "react";
 
@@ -25,7 +26,8 @@ function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-logo">
-        <img src={logo} alt="Gaine Africa Logo" />
+        <img src={logo} alt="Gaine Africa Logo" className="logo" />
+        <img src={textLogo} alt="Gaine Africa Text Logo" className="text-logo" />
       </div>
       <ul className="navbar-links">
         <li><Link to="/">Home</Link></li>
