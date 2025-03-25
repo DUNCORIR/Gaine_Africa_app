@@ -8,7 +8,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const { loginUser } = useAuth(); // ✅ Get loginUser from AuthContext
+  const { loginUser } = useAuth(); // Get loginUser from AuthContext
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -30,14 +30,14 @@ function Login() {
           name: response.data.user.name,
         });
 
-        setMessage("✅ Login successful!");
+        setMessage("Login successful!");
         setTimeout(() => navigate("/dashboard"), 1500);
       } else {
-        setMessage("⚠️ Error: Missing user ID in response.");
+        setMessage("Error: Missing user ID in response.");
       }
     } catch (error) {
-      console.error("❌ Login error:", error);
-      setMessage("❌ Invalid email or password.");
+      console.error("Login error:", error);
+      setMessage("Invalid email or password.");
     }
   };
 
