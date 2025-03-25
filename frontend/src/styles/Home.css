@@ -1,0 +1,74 @@
+/* General Styles */
+.home-container {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  /* ✅ Hero Section */
+  .hero {
+    position: relative;
+    width: 100%;
+    height: 80vh;
+    background: url("../assets/images/hero-image.jpg") center/cover no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .overlay {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    max-width: 90%;
+  }
+  
+  /* ✅ Features Section */
+  .features {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 40px 0;
+  }
+  
+  .feature {
+    flex: 1;
+    min-width: 250px;
+    max-width: 300px;
+    background: #f8f8f8;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .feature h2 {
+    color: #ff9800;
+  }
+  
+  /* ✅ Join Now Section */
+  .join-now {
+    text-align: center;
+    background: #ff9800;
+    color: white;
+    padding: 30px;
+    border-radius: 10px;
+    margin-top: 30px;
+  }
+  
+  .join-btn {
+    display: inline-block;
+    background: white;
+    color: #ff9800;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 15px;
+  }
+  
+  .join-btn:hover {
+    background: rgba(255, 255, 255, 0.8);
+  }  
