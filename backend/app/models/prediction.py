@@ -1,3 +1,7 @@
+#!/usr/bin/python3
+"""
+The prediction model for Gaine Africa
+"""
 from .base_model import BaseModel
 from . import db
 

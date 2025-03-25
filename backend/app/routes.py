@@ -72,7 +72,7 @@ def login():
     if user:
         session['user_id'] = user.id  # Store user ID in session
 
-        # ✅ Return full user details (excluding password)
+        # Return full user details (excluding password)
         return jsonify({
             'message': 'Login successful',
             'user': {
@@ -182,20 +182,29 @@ def update_user(user_id):
 
 @main_routes.route('/api/register', methods=['POST'])
 def register():
-    """Register a new user with hashed password"""
+    """Register a new user with additional fields."""
     data = request.get_json()
     
     # Check if required fields are provided
-    if not data or not all(key in data for key in ["name", "email", "password"]):
+    required_fields = ["name", "email", "password", "phone", "age", "location", "land_size", "crop"]
+    if not data or not all(key in data for key in required_fields):
         return jsonify({"error": "Missing required fields"}), 400
 
     # Check if user already exists
     if User.query.filter_by(email=data["email"]).first():
         return jsonify({"error": "User already exists"}), 400
 
-    # Create a new user instance
-    new_user = User(name=data["name"], email=data["email"])
-    new_user.set_password(data["password"])  # ✅ Correct way to store password
+    # Create a new user instance with additional fields
+    new_user = User(
+        name=data["name"],
+        email=data["email"],
+        phone=data["phone"],
+        age=int(data["age"]),
+        location=data["location"],
+        land_size=float(data["land_size"]),
+        crop=data["crop"]
+    )
+    new_user.set_password(data["password"])  # ✅ Secure password storage
 
     # Save user to database
     db.session.add(new_user)

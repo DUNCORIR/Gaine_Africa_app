@@ -19,6 +19,11 @@ class User(BaseModel):
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)  # Store hashed password
+    phone = db.Column(db.String(20), nullable=False)  # ✅ Added phone field
+    age = db.Column(db.Integer, nullable=False)  # ✅ Added age field
+    location = db.Column(db.String(150), nullable=False)  # ✅ Added location field
+    land_size = db.Column(db.Float, nullable=False)  # ✅ Added land size field
+    crop = db.Column(db.String(100), nullable=False)  # ✅ Added crop type field
     records = db.relationship('Record', backref='user', lazy=True)
 
     def set_password(self, password):
