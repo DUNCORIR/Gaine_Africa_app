@@ -22,6 +22,14 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+  // Convert land_size to float before sending
+    const formDataToSend = {
+        ...formData,
+        land_size: parseFloat(formData.land_size),  // ✅ Convert to float
+    };
+
+    console.log("Submitting Data:", formDataToSend); // Debugging
+
     try {
       const response = await fetch("http://127.0.0.1:5000/api/register", {
         method: "POST",
@@ -53,8 +61,8 @@ function Register() {
         <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
         <input type="number" name="age" placeholder="Age" value={formData.age} onChange={handleChange} required />
         <input type="text" name="location" placeholder="Location" value={formData.location} onChange={handleChange} required />
-        <input type="text" name="landSize" placeholder="Land Size (in acres)" value={formData.landSize} onChange={handleChange} required />
-        <input type="text" name="cropType" placeholder="Main Crop Type" value={formData.cropType} onChange={handleChange} required />
+        <input type="text" name="land_size" placeholder="Land Size (in acres)" value={formData.landSize} onChange={handleChange} required />
+        <input type="text" name="crop" placeholder="Main Crop Type" value={formData.cropType} onChange={handleChange} required />
 
         <button type="submit">Register</button>
       </form>

@@ -194,6 +194,12 @@ def register():
     if User.query.filter_by(email=data["email"]).first():
         return jsonify({"error": "User already exists"}), 400
 
+    # Convert land_size safely (avoid float conversion errors)
+    try:
+        land_size = float(data["land_size"])
+    except ValueError:
+        return jsonify({"error": "Invalid land size format"}), 400
+
     # Create a new user instance with additional fields
     new_user = User(
         name=data["name"],
@@ -201,7 +207,7 @@ def register():
         phone=data["phone"],
         age=int(data["age"]),
         location=data["location"],
-        land_size=float(data["land_size"]),
+        land_size=land_size,
         crop=data["crop"]
     )
     new_user.set_password(data["password"])  # ✅ Secure password storage
