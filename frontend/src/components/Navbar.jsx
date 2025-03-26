@@ -41,6 +41,7 @@ function Navbar() {
         <li><Link to="/">Home</Link></li>
         <li><Link to="/market-data">Market Data</Link></li>
         <li><Link to="/predictions">Predictions</Link></li>
+        <li><Link to="/about">About</Link></li>
         {user && <li><Link to="/dashboard">Dashboard</Link></li>}
         {user && <li><Link to="/records">Records</Link></li>}
       </ul>

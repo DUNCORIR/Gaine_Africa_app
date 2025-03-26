@@ -9,8 +9,8 @@ function Register() {
     password: "",
     age: "",
     location: "",
-    landSize: "",
-    cropType: "",
+    land_size: "",
+    crop: "",
   });
 
   const [message, setMessage] = useState("");

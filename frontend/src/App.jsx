@@ -3,14 +3,15 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import NotFound from "./pages/NotFound";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Records from "./pages/Records";
 import MarketData from "./pages/MarketData";
 import Predictions from "./pages/Predictions";  // Import Predictions page
 import "./styles/global.css";
+import About from "./pages/About";
 import "./styles/Navbar.css";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="*" element={<NotFound />} />
+            <Route path="/about" element={<About />} />
           </Routes>
         </div>
 

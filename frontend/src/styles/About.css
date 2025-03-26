@@ -1,0 +1,47 @@
+import React from "react";
+
+const About = () => {
+  return (
+    <section className="about-section">
+      <h2>About Gaine Africa</h2>
+      <p>
+        Gaine Africa was born out of a need to bridge the gap between small-scale
+        farmers and real-time agricultural data. As a developer passionate about
+        leveraging technology for impact, I saw firsthand how access to market trends,
+        predictive analytics, and digital financial tools could transform agribusiness.
+        This project started as a Portfolio Project for ALX and has since grown into
+        a mission-driven platform aiming to empower farmers with data-driven
+        decision-making.
+      </p>
+
+      <h3>Developer</h3>
+      <p><strong>Duncan Korir</strong></p>
+      <ul>
+        <li>
+          <a href="YOUR_LINKEDIN_URL" target="_blank" rel="noopener noreferrer">
+            LinkedIn
+          </a>
+        </li>
+        <li>
+          <a href="YOUR_GITHUB_URL" target="_blank" rel="noopener noreferrer">
+            GitHub
+          </a>
+        </li>
+        <li>
+          <a href="YOUR_PORTFOLIO_URL" target="_blank" rel="noopener noreferrer">
+            Portfolio
+          </a>
+        </li>
+      </ul>
+
+      <h3>Project Repository</h3>
+      <p>
+        <a href="YOUR_GITHUB_REPO_URL" target="_blank" rel="noopener noreferrer">
+          GitHub Repo
+        </a>
+      </p>
+    </section>
+  );
+};
+
+export default About;
