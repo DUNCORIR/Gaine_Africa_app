@@ -19,6 +19,22 @@
     padding: 20px;
   }
   
+.hero-btn {
+    display: inline-block;
+    background: #ff9800; /* Orange background */
+    color: white; /* White text */
+    padding: 12px 24px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background 0.3s ease-in-out;
+}
+
+.hero-btn:hover {
+    background: #e68900; /* Darker orange on hover */
+}
+
   .overlay {
     background: rgba(0, 0, 0, 0.5);
     color: white;
@@ -75,4 +91,4 @@
   
   .join-btn:hover {
     background: rgba(255, 255, 255, 0.8);
-  }  
+  }

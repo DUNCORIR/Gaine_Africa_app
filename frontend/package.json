@@ -5,7 +5,6 @@
   "main": "main.jsx",
   "version": "0.0.0",
   "type": "module",
-
   "homepage": "https://duncorir.github.io/Gaine_Africa_app/",
   "scripts": {
     "dev": "vite",

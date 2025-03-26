@@ -1,13 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getUser, logoutUser } from "../services/auth";
-import { FaSearch } from "react-icons/fa"; // ✅ Import Search Icon
+import { FaSearch, FaBars } from "react-icons/fa"; // ✅ Import Hamburger Menu Icon
 import logo from "../assets/images/gaine-logo.png";
 import textLogo from "../assets/images/gaine-logoo.png";
 
 function Navbar() {
   const [user, setUser] = useState(getUser());
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false); // ✅ Menu state for small screens
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -32,8 +33,11 @@ function Navbar() {
         <img src={textLogo} alt="Gaine Africa Text Logo" className="text-logo" />
       </div>
 
+      {/* ✅ Hamburger Menu Icon (Visible on Small Screens) */}
+      <FaBars className="menu-icon" onClick={() => setMenuOpen(!menuOpen)} />
+
       {/* Navigation Links */}
-      <ul className="navbar-links">
+      <ul className={`navbar-links ${menuOpen ? "show" : ""}`}>
         <li><Link to="/">Home</Link></li>
         <li><Link to="/market-data">Market Data</Link></li>
         <li><Link to="/predictions">Predictions</Link></li>
@@ -42,7 +46,7 @@ function Navbar() {
       </ul>
 
       {/* Right Section: Login, Register, Search, CTA */}
-      <ul className="navbar-right">
+      <ul className={`navbar-right ${menuOpen ? "show" : ""}`}>
         {!user ? (
           <>
             <li><Link to="/login">Login</Link></li>
