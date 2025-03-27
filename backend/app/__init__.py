@@ -27,7 +27,14 @@ def create_app():
     app.secret_key = "maunyit"
 
     # Enable CORS for all routes with credentials support
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    CORS(app, resources={
+        r"/api/*": {
+            "origins": "http://localhost:5173",
+            "allow_headers": ["Authorization", "Content-Type"],
+            "methods": ["GET", "POST", "PUT", "DELETE"],
+            "supports_credentials": True
+        }
+    })
 
     # Initialize the database with the app
     db.init_app(app)

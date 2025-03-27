@@ -105,6 +105,7 @@ def logout():
     return jsonify({'message': 'Logout successful'}), 200
 
 @main_routes.route('/api/users/<int:user_id>/records', methods=['GET'])
+@jwt_required()
 def get_records(user_id):
     """
     Retrieve all farming records for a specific user.
@@ -131,7 +132,7 @@ def get_records(user_id):
 @main_routes.route('/api/users/<int:user_id>/records', methods=['POST'])
 @cross_origin(origin='http://localhost:5173', supports_credentials=True)
 @jwt_required()
-def create_record():
+def create_record(user_id):
     """
     Create a new farming record for the logged-in user.
     """

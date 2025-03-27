@@ -31,6 +31,19 @@ class Record(BaseModel):
         """Calculate profit/loss dynamically (not stored in DB)."""
         total_expenses = self.planting + self.weeding + self.harvesting + self.storage
         return self.sales - total_expenses
+    
+    def to_dict(self):
+        """Convert record to dictionary including profit/loss."""
+        return {
+            "id": self.id,
+            "crop": self.crop,
+            "planting": self.planting,
+            "weeding": self.weeding,
+            "harvesting": self.harvesting,
+            "storage": self.storage,
+            "sales": self.sales,
+            "profit_or_loss": self.calculate_profit_or_loss()  # Include in output
+        }
 
     def save(self):
         """Save the record with calculated profit/loss (if needed)."""

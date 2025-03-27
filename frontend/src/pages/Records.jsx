@@ -143,8 +143,13 @@ function Records() {
       ) : (
         <ul className="record-list">
           {records.map((record) => {
-            const totalExpenses = record.planting + record.weeding + record.harvesting + record.storage;
-            const profitOrLoss = record.sales - totalExpenses;
+            const totalExpenses = (
+              Number(record.planting || 0) +
+              Number(record.weeding || 0) +
+              Number(record.harvesting || 0) +
+              Number(record.storage || 0)  // Fix the variable name
+            );
+            const profitOrLoss = Number(record.sales || 0) - totalExpenses;
 
             return (
               <li key={record.id} className="record-item">
