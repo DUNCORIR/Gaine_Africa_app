@@ -2,10 +2,9 @@
 """
 Defines the BaseModel class for common database operations.
 """
-
+from app import db
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from ..db import db
 
 class BaseModel(db.Model):
     """

@@ -3,7 +3,7 @@
 The prediction model for Gaine Africa
 """
 from .base_model import BaseModel
-from . import db
+from app import db
 
 class Prediction(BaseModel):
     __tablename__ = "predictions"

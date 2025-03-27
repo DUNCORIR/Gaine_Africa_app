@@ -5,7 +5,7 @@ Defines the User model for the Gaine Africa application.
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from .base_model import BaseModel
-from . import db
+from app import db
 
 
 class User(BaseModel):

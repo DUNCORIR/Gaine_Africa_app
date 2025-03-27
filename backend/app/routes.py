@@ -2,15 +2,18 @@
 """
 Defines the API routes for the Gaine Africa application.
 """
-
-from flask import Blueprint, jsonify, request, session
-from .models import User, Record
-from . import db
+from flask_cors import CORS
+from flask_cors import cross_origin
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask import Blueprint, jsonify, request, session, current_app
+from app.models import User, Record
+from app import db
 from .models.prediction import Prediction
 from flask_bcrypt import Bcrypt
+from werkzeug.security import generate_password_hash, check_password_hash
 
 bcrypt = Bcrypt()
-main_routes = Blueprint('main', __name__)
+main_routes = Blueprint("main_routes", __name__)
 
 def authenticate_user(email, password):
     """Authenticate user by email and password."""
@@ -18,6 +21,17 @@ def authenticate_user(email, password):
     if user and user.check_password(password):
         return user
     return None
+
+@main_routes.after_request
+def after_request(response):
+    """
+    Set security headers and CORS settings.
+    """
+    response.headers["Access-Control-Allow-Origin"] = "http://localhost:5173"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
+    response.headers["Access-Control-Allow-Methods"] = "GET,POST,OPTIONS"
+    return response
 
 @main_routes.route('/api/users', methods=['GET'])
 def get_users():
@@ -95,48 +109,120 @@ def logout():
 @main_routes.route('/api/users/<int:user_id>/records', methods=['GET'])
 def get_records(user_id):
     """
-    Retrieve all records for a specific user.
+    Retrieve all farming records for a specific user.
     """
     records = Record.query.filter_by(user_id=user_id).all()
 
-    # Return an empty array is returned instead of a 404 error
     if not records:
-        return jsonify([]), 200  #  Return empty list instead of error
+        return jsonify([]), 200  # Return empty list instead of 404
 
     return jsonify([
         {
             'id': record.id,
-            'input': record.input_amount,
-            'output': record.output_amount
-        } for record in records
-    ])
+            'crop': record.crop,
+            'planting': record.planting,
+            'weeding': record.weeding,
+            'harvesting': record.harvesting,
+            'storage': record.storage,
+            'sales': record.sales,
+            'profit_or_loss': record.calculate_profit_or_loss()  # Auto-computed
+        }
+        for record in records
+    ]), 200
 
 @main_routes.route('/api/users/<int:user_id>/records', methods=['POST'])
-def create_record(user_id):
+@cross_origin(origin='http://localhost:5173', supports_credentials=True)
+@jwt_required()
+def create_record():
     """
-    Create a new record for a specific user.
-    
-    Args:
-        user_id (int): The ID of the user.
-
-    Returns:
-        JSON response with a success message or an error message.
+    Create a new farming record for the logged-in user.
     """
     data = request.get_json()
-    
-    if not all(key in data for key in ['input', 'output', 'expenses']):
+    user_id = get_jwt_identity()
+
+    required_fields = ["crop", "planting", "weeding", "harvesting", "storage", "sales"]
+    if not all(field in data for field in required_fields):
         return jsonify({'error': 'Missing required fields'}), 400
-    
+
+    try:
+        planting = float(data["planting"])
+        weeding = float(data["weeding"])
+        harvesting = float(data["harvesting"])
+        storage = float(data["storage"])
+        sales = float(data["sales"])
+    except ValueError:
+        return jsonify({'error': 'Invalid number format'}), 400
+
     new_record = Record(
         user_id=user_id,
-        input_amount=data['input'],
-        output_amount=data['output'],
-        expenses=data['expenses']
+        crop=data["crop"],
+        planting=planting,
+        weeding=weeding,
+        harvesting=harvesting,
+        storage=storage,
+        sales=sales
     )
-    db.session.add(new_record)
-    db.session.commit()
-    
+
+    new_record.save()
+
     return jsonify({'message': 'Record created successfully'}), 201
+
+@main_routes.route('/api/users/<int:user_id>/records/<int:record_id>', methods=['PUT'])
+@jwt_required()
+def update_record(user_id, record_id):
+    """
+    Update an existing farming record.
+    """
+    data = request.get_json()
+    user_id_from_token = get_jwt_identity()
+
+    # Ensure user is updating their own record
+    if user_id_from_token != user_id:
+        return jsonify({'error': 'Unauthorized'}), 403
+
+    record = Record.query.filter_by(id=record_id, user_id=user_id).first()
+
+    if not record:
+        return jsonify({'error': 'Record not found'}), 404
+
+    # Update fields if they exist in the request
+    if "crop" in data:
+        record.crop = data["crop"]
+    if "planting" in data:
+        record.planting = float(data["planting"])
+    if "weeding" in data:
+        record.weeding = float(data["weeding"])
+    if "harvesting" in data:
+        record.harvesting = float(data["harvesting"])
+    if "storage" in data:
+        record.storage = float(data["storage"])
+    if "sales" in data:
+        record.sales = float(data["sales"])
+
+    record.save()  # Auto-updates profit/loss
+
+    return jsonify({'message': 'Record updated successfully'}), 200
+
+@main_routes.route('/api/users/<int:user_id>/records/<int:record_id>', methods=['DELETE'])
+@jwt_required()
+def delete_record(user_id, record_id):
+    """
+    Delete a farming record.
+    """
+    user_id_from_token = get_jwt_identity()
+
+    if user_id_from_token != user_id:
+        return jsonify({'error': 'Unauthorized'}), 403
+
+    record = Record.query.filter_by(id=record_id, user_id=user_id).first()
+
+    if not record:
+        return jsonify({'error': 'Record not found'}), 404
+
+    db.session.delete(record)
+    db.session.commit()
+
+    return jsonify({'message': 'Record deleted successfully'}), 200
 
 @main_routes.route('/api/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):

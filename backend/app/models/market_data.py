@@ -4,7 +4,7 @@ Defines the MarketData model for the Gaine Africa application.
 """
 
 from .base_model import BaseModel
-from . import db
+from app import db
 
 
 class MarketData(BaseModel):
