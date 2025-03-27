@@ -12,35 +12,49 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    setMessage(""); // Clear any previous message
+  e.preventDefault();
+  setMessage("");
 
-    try {
-      const response = await axios.post("http://127.0.0.1:5000/api/login", {
-        email,
-        password,
+  try {
+    const response = await axios.post(
+      "http://127.0.0.1:5000/api/login",
+      { email, password },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // withCredentials: true  // Only needed for session cookies
+      }
+    );
+
+    console.log("🔑 Full Response:", response.data);
+
+    // Check for both token and user data
+    if (response.data.access_token && response.data.user?.id) {
+      // Store JWT token in localStorage
+      localStorage.setItem("token", response.data.access_token);
+      
+      // Update auth context
+      loginUser({
+        email: response.data.user.email,
+        id: response.data.user.id,
+        name: response.data.user.name || "User"  // Fallback for name
       });
 
-      console.log("🔍 Debug: Backend Response:", response.data);
-
-      if (response.data.user && response.data.user.id) {
-        loginUser({
-          email: response.data.user.email,
-          id: response.data.user.id,
-          name: response.data.user.name,
-        });
-
-        setMessage("Login successful!");
-        setTimeout(() => navigate("/dashboard"), 1500);
-      } else {
-        setMessage("Error: Missing user ID in response.");
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      setMessage("Invalid email or password.");
+      setMessage("Login successful!");
+      setTimeout(() => navigate("/dashboard"), 1500);
+    } else {
+      setMessage("Unexpected response format from server");
     }
-  };
-
+  } catch (error) {
+    console.error("🔴 Login error:", error);
+    setMessage(
+      error.response?.data?.error || 
+      error.response?.data?.message || 
+      "Login failed. Please try again."
+    );
+  }
+};
   return (
     <div className="login-container">
       <h1>Login</h1>

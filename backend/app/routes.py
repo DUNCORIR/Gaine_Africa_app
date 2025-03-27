@@ -4,7 +4,7 @@ Defines the API routes for the Gaine Africa application.
 """
 from flask_cors import CORS
 from flask_cors import cross_origin
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 from flask import Blueprint, jsonify, request, session, current_app
 from app.models import User, Record
 from app import db
@@ -18,7 +18,7 @@ main_routes = Blueprint("main_routes", __name__)
 def authenticate_user(email, password):
     """Authenticate user by email and password."""
     user = User.query.filter_by(email=email).first()
-    if user and user.check_password(password):
+    if user and user.check_password(password):  # ✅ Use the model's method
         return user
     return None
 
@@ -82,13 +82,11 @@ def login():
         return jsonify({'error': 'Email and password are required'}), 400
 
     user = authenticate_user(data['email'], data['password'])
-    
-    if user:
-        session['user_id'] = user.id  # Store user ID in session
 
-        # Return full user details (excluding password)
+    if user:
+        access_token = create_access_token(identity=user.id)  # 👈 Create JWT token
         return jsonify({
-            'message': 'Login successful',
+            'access_token': access_token,
             'user': {
                 'id': user.id,
                 'name': user.name,
@@ -96,7 +94,7 @@ def login():
             }
         }), 200
     else:
-        return jsonify({'error': 'Invalid email or password'}), 401
+        return jsonify({'error': 'Invalid credentials'}), 401
 
 @main_routes.route('/api/logout', methods=['POST'])
 def logout():
