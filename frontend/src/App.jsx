@@ -15,7 +15,7 @@ import NotFound from "./pages/NotFound";
 
 function App() {
   return (
-    <Router basename="/Gaine_Africa_app">
+    <Router basename="/Gaine_Africa_app/">
       <div className="app-container">
         <Navbar />
 

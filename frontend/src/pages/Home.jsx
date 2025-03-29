@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import "../styles/Home.css";
 import heroImage from "../assets/images/hero-image.jpg"; // ✅ Import hero image
+import TeamVideo from '../components/TeamVideo';
 
 function Home() {
   return (
@@ -11,6 +12,8 @@ function Home() {
         <p>Empowering smallholder farmers with real-time market data, predictive analytics, and digital record-keeping tools.</p>
         <Link to="/register" className="hero-btn">Get Started</Link>
       </div>
+      {/* Project Story Video */}
+      <TeamVideo />
 
       {/* Features Section */}
       <div className="features">
