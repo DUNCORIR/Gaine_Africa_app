@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+  <script>
+    // Capture the intended path and redirect to React app
+    (function() {
+      const redirectPath = window.location.pathname;
+      
+      // Store the original path in session storage
+      sessionStorage.setItem('redirect', redirectPath);
+      
+      // Redirect to your app's base URL
+      window.location.href = '/Gaine_Africa_app/';
+    })();
+  </script>
+</head>
+<body>
+  <!-- Optional: Add a loading message -->
+  <h1>Redirecting to Gaine Africa...</h1>
+</body>
+</html>

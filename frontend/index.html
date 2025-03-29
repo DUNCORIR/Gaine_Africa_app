@@ -12,5 +12,16 @@
 <body>
     <div id="root"></div> <!-- Vite injects React App here -->
     <script type="module" src="./src/main.jsx"></script>
+    <script>
+  // Restore the original route after React app loads
+  (function() {
+    const redirect = sessionStorage.redirect;
+    delete sessionStorage.redirect;
+    
+    if (redirect && redirect !== location.pathname) {
+      history.replaceState(null, null, redirect);
+    }
+  })();
+</script>
 </body>
 </html>
