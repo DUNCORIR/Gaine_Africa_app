@@ -15,11 +15,11 @@ import NotFound from "./pages/NotFound";
 
 function App() {
   return (
-    <Router>
+    <Router basename="/Gaine_Africa_app">
       <div className="app-container">
         <Navbar />
 
-        {/* ✅ Wrap Routes in a container so the footer stays at bottom */}
+        {/*  Wrap Routes in a containerr so the footer stays at bottom */}
         <div className="main-content">
           <Routes>
             <Route path="/" element={<Home />} />
