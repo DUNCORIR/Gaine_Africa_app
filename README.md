@@ -1,4 +1,6 @@
 Gaine Africa
+
+
 ![Gaine Africa Logo](landing-page.png)
 📌 Introduction
 Gaine Africa is a digital agriculture platform that enables smallholder farmers to make data-driven decisions by providing:
