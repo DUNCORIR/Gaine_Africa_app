@@ -9,7 +9,7 @@ const TeamVideo = () => {
         <iframe 
           width="100%"
           height="500"
-          src="https://www.loom.com/share/27b96be69efa4871a2f72d0aefab5818?sid=a483fae6-a562-4c31-94f8-e685cb7728c1"
+          src="https://www.loom.com/share/fc52c70a0aeb4d5eb1b9b5c22dd362d6?sid=cee54e9b-2f68-4dc1-a99b-c75b54026b39"
           title="Gaine Africa Project Overview"
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

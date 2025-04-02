@@ -1,6 +1,9 @@
 #!/usr/bin/python3
 """
-Defines the API routes for the Gaine Africa application.
+Gaine Africa API Routes Module
+
+Defines all RESTful endpoints for user management, agricultural record tracking,
+and crop prediction features. Implements JWT authentication and CORS security.
 """
 from flask_cors import CORS
 from flask_cors import cross_origin
@@ -12,20 +15,37 @@ from .models.prediction import Prediction
 from flask_bcrypt import Bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
 
+# Initialize password hashing utility
 bcrypt = Bcrypt()
+
+# Create main blueprint with versioned API prefix
 main_routes = Blueprint("main_routes", __name__)
 
 def authenticate_user(email, password):
-    """Authenticate user by email and password."""
+    """
+    Authenticate user credentials against database records.
+    
+    Args:
+        email (str): User's email address
+        password (str): Plaintext password to verify
+        
+    Returns:
+        User: Authenticated user object or None
+    """
     user = User.query.filter_by(email=email).first()
-    if user and user.check_password(password):  # ✅ Use the model's method
+    if user and user.check_password(password):  # Use the model's method
         return user
     return None
 
 @main_routes.after_request
 def after_request(response):
     """
-    Set security headers and CORS settings.
+    Apply security headers and CORS policies to all responses.
+    
+    Ensures:
+    - Strict origin policy for frontend access
+    - Credential support for authenticated requests
+    - Approved headers and methods for cross-origin requests
     """
     response.headers["Access-Control-Allow-Origin"] = "http://localhost:5173"
     response.headers["Access-Control-Allow-Credentials"] = "true"
@@ -36,10 +56,12 @@ def after_request(response):
 @main_routes.route('/api/users', methods=['GET'])
 def get_users():
     """
-    Retrieve all users.
+    Retrieve basic information for all registered users.
 
     Returns:
-        JSON response containing a list of users.
+        JSON: List of user objects with id and name
+        Status:
+            - 200: Successful retrieval
     """
     users = User.query.all()
     return jsonify([{'id': user.id, 'name': user.name} for user in users])
@@ -47,20 +69,32 @@ def get_users():
 @main_routes.route('/api/users', methods=['POST'])
 def create_user():
     """
-    Create a new user with email uniqueness check.
-
+Register new user with email uniqueness validation.
+    
+    Expected JSON Payload:
+        - name: User's full name
+        - email: Unique email address
+        - password: Login credential
+        
     Returns:
-        JSON response with a success message or an error message.
+        JSON: Success/error message
+        Status:
+            - 201: User created successfully
+            - 400: Missing required fields
+            - 409: Email already registered
     """
     data = request.get_json()
-    
+
+    # Validate required fields
     if not all(key in data for key in ['name', 'email', 'password']):
         return jsonify({'error': 'Missing required fields'}), 400
     
+    # Check for existing email
     existing_user = User.query.filter_by(email=data['email']).first()
     if existing_user:
         return jsonify({'error': 'Email already in use'}), 409
     
+    # Create and persist new user
     new_user = User(name=data['name'], email=data['email'])
     new_user.set_password(data['password'])
     db.session.add(new_user)
@@ -71,20 +105,30 @@ def create_user():
 @main_routes.route('/api/login', methods=['POST'])
 def login():
     """
-    Authenticate a user and return user details.
-
+    Authenticate user and generate JWT access token.
+    
+    Expected JSON Payload:
+        - email: Registered email address
+        - password: Account password
+        
     Returns:
-        JSON response with user details or an error message.
+        JSON: Access token and user details
+        Status:
+            - 200: Successful login
+            - 400: Missing credentials
+            - 401: Invalid credentials
     """
     data = request.get_json()
 
+    # Validate input presence
     if not data or not data.get('email') or not data.get('password'):
         return jsonify({'error': 'Email and password are required'}), 400
 
     user = authenticate_user(data['email'], data['password'])
 
     if user:
-        access_token = create_access_token(identity=user.id)  # 👈 Create JWT token
+        # Generate JWT token with user identity
+        access_token = create_access_token(identity=user.id)  # Create JWT token
         return jsonify({
             'access_token': access_token,
             'user': {
@@ -99,7 +143,12 @@ def login():
 @main_routes.route('/api/logout', methods=['POST'])
 def logout():
     """
-    Logs out a user by clearing the session.
+    Logs out a user by clearing the session data.
+
+    Returns:
+        JSON: Success message
+        Status:
+            - 200: Logout successful
     """
     session.pop('user_id', None)
     return jsonify({'message': 'Logout successful'}), 200
@@ -108,12 +157,23 @@ def logout():
 @jwt_required()
 def get_records(user_id):
     """
-    Retrieve all farming records for a specific user.
+    Retrieve agricultural records for authenticated user.
+    
+    Args:
+        user_id (int): Target user ID from URL path
+        
+    Returns:
+        JSON: List of farming records with calculated profits
+        Status:
+            - 200: Successful retrieval (empty array if no records)
+            - 401: Missing/invalid JWT
     """
     records = Record.query.filter_by(user_id=user_id).all()
 
     if not records:
-        return jsonify([]), 200  # Return empty list instead of 404
+        
+        # Return empty list instead of 404
+        return jsonify([]), 200
 
     return jsonify([
         {
@@ -134,16 +194,36 @@ def get_records(user_id):
 @jwt_required()
 def create_record(user_id):
     """
-    Create a new farming record for the logged-in user.
+    Create new agricultural record for authenticated user.
+    
+    Expected JSON Payload:
+        - crop: Crop type
+        - planting: Planting cost
+        - weeding: Weeding cost
+        - harvesting: Harvesting cost
+        - storage: Storage cost
+        - sales: Sales revenue
+        
+    Args:
+        user_id (int): Authenticated user ID from JWT
+        
+    Returns:
+        JSON: Success/error message
+        Status:
+            - 201: Record created
+            - 400: Invalid/missing data
+            - 401: Unauthorized access
     """
     data = request.get_json()
     user_id = get_jwt_identity()
 
+    # Validate required fields
     required_fields = ["crop", "planting", "weeding", "harvesting", "storage", "sales"]
     if not all(field in data for field in required_fields):
         return jsonify({'error': 'Missing required fields'}), 400
 
     try:
+        # Convert financial values to floats
         planting = float(data["planting"])
         weeding = float(data["weeding"])
         harvesting = float(data["harvesting"])
@@ -151,7 +231,8 @@ def create_record(user_id):
         sales = float(data["sales"])
     except ValueError:
         return jsonify({'error': 'Invalid number format'}), 400
-
+    
+    # Create and persist new record
     new_record = Record(
         user_id=user_id,
         crop=data["crop"],
@@ -170,12 +251,31 @@ def create_record(user_id):
 @jwt_required()
 def update_record(user_id, record_id):
     """
-    Update an existing farming record.
+    Update specific agricultural record with partial/full data.
+    
+    Args:
+        user_id (int): User ID from URL path
+        record_id (int): Target record ID from URL path
+        
+    Expected JSON Payload (any combination):
+        - crop: Updated crop type
+        - planting: Revised planting cost
+        - weeding: Revised weeding cost
+        - harvesting: Revised harvesting cost
+        - storage: Revised storage cost
+        - sales: Revised sales revenue
+        
+    Returns:
+        JSON: Success/error message
+        Status:
+            - 200: Update successful
+            - 403: Unauthorized modification attempt
+            - 404: Record not found
     """
     data = request.get_json()
     user_id_from_token = get_jwt_identity()
 
-    # Ensure user is updating their own record
+    # Authorization check
     if user_id_from_token != user_id:
         return jsonify({'error': 'Unauthorized'}), 403
 
@@ -184,7 +284,7 @@ def update_record(user_id, record_id):
     if not record:
         return jsonify({'error': 'Record not found'}), 404
 
-    # Update fields if they exist in the request
+    # Partial update implementation
     if "crop" in data:
         record.crop = data["crop"]
     if "planting" in data:
@@ -206,7 +306,18 @@ def update_record(user_id, record_id):
 @jwt_required()
 def delete_record(user_id, record_id):
     """
-    Delete a farming record.
+    Permanently remove an agricultural record.
+    
+    Args:
+        user_id (int): User ID from URL path
+        record_id (int): Target record ID from URL path
+        
+    Returns:
+        JSON: Success/error message
+        Status:
+            - 200: Deletion successful
+            - 403: Unauthorized deletion attempt
+            - 404: Record not found
     """
     user_id_from_token = get_jwt_identity()
 
@@ -233,6 +344,9 @@ def get_user(user_id):
 
     Returns:
         JSON response containing the user details or an error message.
+        Status:
+            - 200: User found
+            - 404: User not found
     """
     user = User.query.get(user_id)
     if not user:
@@ -248,8 +362,15 @@ def update_user(user_id):
     Args:
         user_id (int): The ID of the user.
 
+    Expected JSON Payload:
+        - name: Updated full name
+        - email: Updated email address
+        
     Returns:
-        JSON response with success or error message.
+        JSON: Success/error message
+        Status:
+            - 200: Update successful
+            - 404: User not found
     """
     user = User.query.get(user_id)
     if not user:
@@ -305,13 +426,35 @@ def register():
 
 @main_routes.route('/api/predictions', methods=['GET'])
 def get_predictions():
-    """Retrieve all AI crop predictions."""
+    """
+    Retrieve all stored crop yield predictions.
+    
+    Returns:
+        JSON: List of prediction objects
+        Status:
+            - 200: Always successful (empty array if no predictions)
+    """
     predictions = Prediction.query.all()
     return jsonify([prediction.to_dict() for prediction in predictions])
 
 @main_routes.route('/api/predictions', methods=['POST'])
 def add_prediction():
-    """Add a new AI crop prediction."""
+    """
+    Store new AI-generated crop prediction.
+    
+    Expected JSON Payload:
+        - user_id: Associated farmer ID
+        - crop: Predicted crop type
+        - yield_estimate: Projected yield in kilograms
+        - market_price: Anticipated price per unit
+        
+    Returns:
+        JSON: Success/error message
+        Status:
+            - 201: Prediction stored
+            - 400: Missing required fields
+    
+    """
     data = request.get_json()
 
     if not all(key in data for key in ['user_id', 'crop', 'yield_estimate', 'market_price']):

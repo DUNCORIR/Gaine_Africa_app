@@ -1,143 +1,225 @@
-# Gaine Africa
+Gaine Africa
+![Gaine Africa Logo](landing-page.png)
+📌 Introduction
+Gaine Africa is a digital agriculture platform that enables smallholder farmers to make data-driven decisions by providing:
+✅ Real-time market data for better pricing decisions.
+✅ Digital record-keeping for tracking farm activities and finances.
+✅ Predictive analytics to forecast crop yields based on historical data and weather patterns.
+✅ Future secure payments via M-Pesa and Airtel Money for premium features.
 
-## Overview
-Gaine Africa is a platform that empowers smallholder farmers with **real-time market data**, **digital record-keeping**, and **predictive analytics** to optimize farming decisions and improve productivity.
+⚡ Live Demo
+🌍 Gaine Africa Live
+https://duncorir.github.io/Gaine_Africa_app/
 
----
-Project Structure
+Authors: 
+- **Duncan Korir** - [LinkedIn](https://www.linkedin.com/in/duncorir)
+- GitHub: [duncorir](https://github.com/duncorir)
+
+📢 Read our project blog: Blog Article: 
+https://medium.com/@duncorir/gaine-africa-bridging-the-digital-divide-in-african-agriculture-b689c8288fd3
+
+Empowering smallholder farmers with real-time market data, digital record-keeping, and predictive analytics for smarter farming.
+
+⭐ Star us on GitHub — it motivates us to keep improving! ⭐
+
+📌 Table of Contents
+
+🚀 Overview
+
+📂 Project Structure
+
+🔥 Features
+
+🛠️ Technologies
+
+📚 Setup Instructions
+
+📖 API Endpoints
+
+🤝 Contributing
+
+📜 License
+
+📞 Contact
+
+🚀 Overview
+
+Gaine Africa is a data-driven agricultural platform that helps farmers:
+
+Access real-time market prices 📊
+
+Keep digital farm records 📝
+
+Leverage AI-powered predictions 🤖
+
+(Upcoming) Securely pay using M-Pesa or Airtel Money 💰
+
+By integrating modern technology, we aim to improve decision-making and maximize productivity for smallholder farmers.
+
+📂 Project Structure
+
 Gaine-Africa-app/
-├── backend/
+├── backend/                # Backend (Flask + PostgreSQL)
 │   ├── app/
-│   │   ├── __init__.py
-│   │   ├── models/                  # New models folder
-│   │   │   ├── __init__.py          # Initializes models
-│   │   │   ├── base_model.py        # Base model class
-│   │   │   ├── user.py             # User model
-│   │   │   ├── record.py           # Record model
-│   │   │   └── market_data.py      # MarketData model (if needed)
-│   │   ├── routes.py
-│   │   └── services.py
-│   ├── config.py
-│   ├── requirements.txt
-│   └── run.py
-├── frontend/                 # Frontend (React) code
-│   ├── public/               # Static assets (e.g., index.html)
-│   ├── src/                  # React components and logic
-│   │   ├── components/       # Reusable components (e.g., Navbar, Footer)
-│   │   ├── pages/            # Pages (e.g., Dashboard, MarketData)
-│   │   ├── services/         # API service calls (e.g., axios requests)
-│   │   ├── App.js            # Main app component
-│   │   ├── index.js          # Entry point
-│   │   └── styles/           # CSS or Tailwind/Bootstrap styles
-│   ├── package.json          # Node.js dependencies
-│   └── README.md             # Frontend-specific setup instructions
+│   │   ├── models/         # Database models
+│   │   ├── routes.py       # API routes
+│   │   ├── services.py     # Business logic
+│   ├── config.py           # Configuration settings
+│   ├── requirements.txt    # Python dependencies
+│   └── run.py              # Application entry point
 │
-├── README.md                 # Main project documentation
-└── .gitignore                # Files to ignore in Git
-## Features
-- **Real-Time Market Data**: Access up-to-date market prices and trends.
-- **Digital Record-Keeping**: Track farm inputs, outputs, and expenses.
-- **Predictive Analytics**: Receive AI-driven crop yield predictions based on historical data and weather patterns.
-- **Secure Payments**: (Future) Pay for premium features using M-Pesa or Airtel Money.
+├── frontend/               # Frontend (React)
+│   ├── src/
+│   │   ├── components/     # Reusable UI components
+│   │   ├── pages/          # Application pages
+│   │   ├── services/       # API service calls
+│   │   ├── App.js          # Main app component
+│   │   ├── index.js        # React entry point
+│   └── styles/             # Styling (CSS/Tailwind)
+│
+├── README.md               # Documentation
+└── .gitignore              # Ignore unnecessary files
 
----
+🔥 Features
 
-## Technologies
-- **Frontend**: React.js, Tailwind CSS, Axios
-- **Backend**: Flask (Python), PostgreSQL, SQLAlchemy
-- **AI/ML**: scikit-learn, TensorFlow
-- **Payment Integration**: M-Pesa, Airtel Money APIs
-- **Hosting**: Heroku (backend), Netlify (frontend)
+✅ Real-Time Market Data: View latest commodity prices
 
----
+✅ Digital Record-Keeping: Track farm inputs, yields, and expenses
 
-## Setup Instructions
+✅ AI-Based Predictions(Future Update): Smart insights for better decision-making
 
-### Backend (Flask)
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/Gaine_africa-app.git
-   cd Gaine_africa-app/backend
+✅ Secure Payments (Future Update): M-Pesa & Airtel Money support
 
-   2.Set up a virtual environment (optional but recommended):
+🛠️ Technologies
 
-bash
+Category
+
+Tech Stack
+
+Frontend
+
+React.js, Tailwind CSS, Axios
+
+Backend
+
+Flask (Python), PostgreSQL, SQLAlchemy
+
+AI/ML
+
+scikit-learn, TensorFlow
+
+Payments (Planned)
+
+M-Pesa API, Airtel Money API
+
+Hosting
+
+Heroku (backend), Netlify (frontend)
+
+📚 Setup Instructions
+
+Backend (Flask)
+
+1️⃣ Clone the repository:
+
+git clone https://github.com/duncorir/Gaine_africa-app.git
+cd Gaine_africa-app/backend
+
+2️⃣ Set up a virtual environment:
 
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-Install dependencies:
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
-bash
+3️⃣ Install dependencies:
 
 pip install -r requirements.txt
-Set up the database:
 
-Ensure PostgreSQL is installed and running.
+4️⃣ Set up the database:
 
-Update the database URI in config.py:
+Ensure MySQL is installed and running.
+Update config.py with your database credentials:
 
-python
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:maunyit@localhost/gaine_africa'
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-SQLALCHEMY_DATABASE_URI = 'postgresql://username:password@localhost/gaine_africa'
-Run the backend:
-
-bash
+5️⃣ Run the backend:
 
 python run.py
-Frontend (React)
-Navigate to the frontend directory:
 
-bash
+Frontend (React)
+
+1️⃣ Navigate to the frontend directory:
 
 cd ../frontend
-Install dependencies:
 
-bash
+2️⃣ Install dependencies:
 
 npm install
-Run the frontend:
 
-bash
+3️⃣ Run the frontend:
 
 npm start
-API Endpoints
-Backend (Flask)
-User Authentication:
 
-POST /api/register: Register a new user.
+🔗 API Endpoints
+🛡 User Authentication
+POST /api/register - Register a new user
 
-POST /api/login: Log in an existing user.
+POST /api/login - Authenticate and log in a user
 
-Market Data:
+📊 Market Data
+GET /api/market-data - Fetch real-time market prices
 
-GET /api/market-data: Fetch real-time market data.
+📜 Record-Keeping
+POST /api/record-keeping - Add a new farm record
 
-Record-Keeping:
+GET /api/record-keeping - Retrieve farm records
 
-POST /api/record-keeping: Add a new farm record.
+📈 Predictive Analytics
+GET /api/predictive-analytics - AI-driven crop yield forecasts
 
-GET /api/record-keeping: Retrieve farm records.
+## Usage
+- Users can **register** and **log in** to their accounts.
+- Farmers can access **real-time market prices** for agricultural products.
+- AI-driven **predictive analytics** help optimize farming decisions.
+- Digital **record-keeping tools** enable farmers to track expenses and sales.
 
-Predictive Analytics:
+🤝 Contributing
 
-GET /api/predictive-analytics: Fetch crop yield predictions.
+We welcome contributions! 🛠️
 
-Contributing
-Contributions are welcome! If you'd like to contribute, please follow these steps:
+Fork the repository
 
-Fork the repository.
+Create a new branch (git checkout -b feature/new-feature)
 
-Create a new branch (git checkout -b feature/your-feature).
+Commit your changes (git commit -m "Add new feature")
 
-Commit your changes (git commit -m 'Add some feature').
+Push to the branch (git push origin feature/new-feature)
 
-Push to the branch (git push origin feature/your-feature).
+Open a Pull Request 🎉
 
-Open a pull request.
+For detailed contribution guidelines, check CONTRIBUTING.md.
 
-Contact
-For questions or feedback, please contact:
+🌟 Related Projects
+If you're interested in agritech and AI, check out these projects:
 
-Duncan Korir: duncorir@gmail.com
+FarmStack - A blockchain-based farming ledger
 
-GitHub:duncorir
+CropPredict AI - AI-based crop yield predictions
+
+AgriFinance - Micro-financing solutions for farmers
+
+📜 License
+
+This project is MIT licensed. See the LICENSE file for details.
+
+📞 Contact
+
+📧 Duncan Korir - duncorir@gmail.com🔗 
+📧 Email: duncorir@gmail.com
+🔗 LinkedIn: Duncan Korir
+📂 GitHub: duncorir
+
+💡 Transforming agriculture with technology – one farm at a time! 🚜🌾
+
+# Sreeen Shots
+![Screenshot 1](public/hero-image.jpg)
